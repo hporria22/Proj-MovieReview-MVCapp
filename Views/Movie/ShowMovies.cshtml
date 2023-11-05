@@ -1,0 +1,83 @@
+@model List<OmdbMovie>
+
+<head>
+    <link rel="stylesheet" href="~/wwwroot/css/site.css">
+    <style>
+      .search-button {
+    background-color: #007bff; /* Background color */
+    color: #fff; /* Text color */
+    border: none; /* Remove border */
+    padding: 5px 10px; /* Padding for button size */
+    cursor: pointer; /* Show hand cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Hover Effect */
+.search-button:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+}
+
+/* Focus Effect (for accessibility) */
+.search-button:focus {
+    outline: none; /* Remove default focus outline (customize as needed) */
+    box-shadow: 0 0 5px #007bff; /* Add a subtle shadow when focused */
+}
+    </style>
+</head>
+<script src="~/wwwroot/js/site.js"></script>
+<body >
+   
+
+   <div>
+   @using (Html.BeginForm("ShowMoviesByGenre","Movie",FormMethod.Get))
+   {
+      <label >Genre:</label>
+       <select id="genre" name="genre" >
+        <option value="">-- Select Genre --</option>
+        <option value="Action">Action</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Drama">Drama</option>
+        <option value="Horror">Horror</option>
+      </select>
+        <button type="submit" class="search-button">search</button>
+
+   }
+   </div>
+      @* @using(Html.BeginForm("ShowMoviesByYear","Movie",FormMethod.Get))
+      {
+      <input type="text" style="width: 108px;heigth:17px;" id="year" name="year" placeholder="Enter a year">
+         
+      } *@
+
+      
+      
+        
+     
+ <div class="d-flex flex-wrap" style="margin-top:8rem">
+    @foreach(OmdbMovie movie in Model )
+
+    {<div class="flex-card-col">
+   <form action="Details" onclick="submit()" method="get">
+    
+         <img class="movie-poster"  src=@movie.Poster alt="unavailable">
+         <div class="card-body content" >
+          <h3 class="movie-title">@movie.Title</h3>
+          <h4 class="movie-info"><strong>Year:</strong> @movie.Year</h4>
+          <h4 class="movie-info"><strong>Genre:</strong> @movie.Genre</h4>
+          <h4 class="movie-info"><strong>Director:</strong> @movie.Director</h4>
+          <h4 class="movie-info"><strong>Actors:</strong> @movie.Actors</h4>
+         </div>
+      <input type="hidden" name="title" value="@movie.Title">
+      </form>
+     </div>
+     
+    }
+   
+
+ </div>
+ 
+   
+
+</body>
+
+

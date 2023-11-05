@@ -1,0 +1,141 @@
+@model OmdbMovie
+@{
+    var emailCookies = Context.Request.Cookies["Email"];
+}
+ @inject IConfiguration _configuration
+@{ 
+    var tokenCookies = Context.Request.Cookies["Token"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/wwwroot/css/site.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .movie-container {
+            border-radius: 10px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin: 20px;
+        }
+
+        .movie-poster {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .movie-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .movie-info {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .review-container {
+            margin-top: 40px;
+        }
+
+        .review-card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .btn-green {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="movie-container">
+@if(tokenCookies!=null)
+    {
+                      
+        @if (Model != null)
+        {
+            <img class="movie-poster" src="@Model.Poster" alt="Unavailable poster">
+            <h1 class="movie-title">@Model.Title</h1>
+            <p class="movie-info"><strong>Imbd Ratings:</strong> @Model.imdbRating</p>
+            <p class="movie-info"><strong>Year:</strong> @Model.Year</p>
+            <p class="movie-info"><strong>Rated:</strong> @Model.Rated</p>
+            <p class="movie-info"><strong>Genre:</strong> @Model.Genre</p>
+            <p class="movie-info"><strong>Director:</strong> @Model.Director</p>
+            <p class="movie-info"><strong>Actors:</strong> @Model.Actors</p>
+            <p class="movie-info"><strong>Plot:</strong> @Model.Plot</p>
+            <hr>
+            <h3>Comments</h3>
+        }
+
+        @if (ViewBag.reviews != null)
+        {
+          
+            <div class="reviews-container">
+            @foreach (var Review in ViewBag.reviews)
+            {
+                
+                    <div class="review-card">
+                    <h3>@Review.Comment</h3>
+                    <p><i>-@Review.UserEmail</i></p>
+                    </div>
+               
+            }
+             </div>
+        }
+        }
+    </div>
+
+    <div class="review-container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="well well-sm">
+                    <div class="text-right">
+                        <a class="btn btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+                    </div>
+
+                    <div class="row" id="post-review-box" style="display:none;">
+                        <div class="col-md-12">
+                            <form method="post" asp-action="AddReview" asp-controller="Movie">
+                                <input type="hidden" name="UserEmail" value="@emailCookies">
+                                <input type="hidden" name="MovieTitle" value="@Model.Title">
+                                <input type="text" name="Comment">
+                                <div class="text-right">
+                                    <div class="stars starrr" data-rating="0"></div>
+                                    <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
+                                        <span class="glyphicon glyphicon-remove"></span>Cancel
+                                    </a>
+                                    <button class="btn btn-success btn-lg" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
